@@ -1,0 +1,56 @@
+version: '3.4'
+
+networks:
+  dev:
+    driver: bridge 
+
+services:
+  eclipseworks_api:
+    image: ${DOCKER_REGISTRY-}eclipseworks_api
+    depends_on:
+      - "eclipseworks_db"
+    container_name: eclipseworks_api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5009:8080"
+      - "5010:8081"
+    build:
+      context: .
+      dockerfile: EclipseWorks.API/Dockerfile
+    networks:
+      - dev
+      
+  eclipseworks_db:
+    image: postgres:latest
+    container_name: eclipseworks_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=102030
+      - POSTGRES_DB=eclipseworks_dev
+    ports:
+      - "5433:5432"
+    restart: always
+    volumes:
+      - pg_db:/var/lib/postgresql/data/
+    networks:
+      - dev
+
+  pg_admin:
+    image: dpage/pgadmin4
+    depends_on:
+      - "eclipseworks_db"
+    container_name: pg_admin
+    ports:
+      - "82:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=pgadmin@pgadmin.com
+      - PGADMIN_DEFAULT_PASSWORD=102030
+    volumes:
+      - pg_admin:/var/lib/pgadmin
+    networks:
+      - dev
+
+volumes:
+  pg_admin:
+  pg_db:
