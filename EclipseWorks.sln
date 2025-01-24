@@ -21,6 +21,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EclipseWorks.API", "Eclipse
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{9F6DC306-F0AA-4BAD-AF8E-F1399A877A72}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{E3624779-C977-4741-8510-5E5B5E04EA7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EclipseWorks.Test", "..\EclipseWorks.Test\EclipseWorks.Test.csproj", "{D0D04F52-62D0-43A5-B601-4CFE9CC170E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +59,10 @@ Global
 		{9F6DC306-F0AA-4BAD-AF8E-F1399A877A72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F6DC306-F0AA-4BAD-AF8E-F1399A877A72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F6DC306-F0AA-4BAD-AF8E-F1399A877A72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0D04F52-62D0-43A5-B601-4CFE9CC170E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0D04F52-62D0-43A5-B601-4CFE9CC170E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0D04F52-62D0-43A5-B601-4CFE9CC170E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0D04F52-62D0-43A5-B601-4CFE9CC170E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +74,7 @@ Global
 		{F3495E2A-4EF1-423E-9497-57EC05A54A93} = {E5C9C5AA-FFE2-4DAA-9B5D-F342ED1D80B4}
 		{C2E1CD7E-EBC8-425A-A046-9B5737F8E647} = {E5C9C5AA-FFE2-4DAA-9B5D-F342ED1D80B4}
 		{1C1D412D-B542-4CCA-8792-F8658F22E758} = {8BCF17DA-53D0-497B-8B4B-DC70EBB9CC07}
+		{D0D04F52-62D0-43A5-B601-4CFE9CC170E5} = {E3624779-C977-4741-8510-5E5B5E04EA7B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE395340-E231-43C3-8887-422437F7D1BB}

@@ -7,5 +7,6 @@ namespace EclipseWorks.Services.Interfaces
         Task UpdateStatusAsync(TaskModel entity, CancellationToken ct);
         Task RemoveAllByProjectAsync(long projectId, CancellationToken ct);
         Task<IEnumerable<TaskModel>> GetAllByProjectAsync(long projectId, CancellationToken ct);
+        Task<IEnumerable<TaskModel>> GetAllPendindByProjectAsync(long projectId, CancellationToken ct);
     }
 }

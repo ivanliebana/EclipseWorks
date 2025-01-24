@@ -46,7 +46,7 @@ namespace EclipseWorks.Infrastructure.Repositories
                 .Set<ProjectModel>()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x =>
-                    EF.Functions.Unaccent(x.Title.ToLower()).Equals(title.ToLower())
+                    x.Title.ToLower().Equals(title.ToLower())
                     && x.Active,
                     cancellationToken: ct);
         }

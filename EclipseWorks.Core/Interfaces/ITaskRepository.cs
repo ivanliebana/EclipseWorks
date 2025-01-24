@@ -7,6 +7,8 @@ namespace EclipseWorks.Core.Interfaces
         Task RemoveAllByProjectAsync(long projectId, CancellationToken ct);
 
         Task<IEnumerable<TaskModel>> FindAllByProjectAsync(long projectId, CancellationToken ct);
+        
+        Task<IEnumerable<TaskModel>> FindAllPendingByProjectAsync(long projectId, CancellationToken ct);
 
         Task<TaskModel> FindByTitleAsync(string title, CancellationToken ct);
     }

@@ -1,5 +1,6 @@
 ﻿using EclipseWorks.Core.Interfaces;
 using EclipseWorks.Core.Models;
+using EclipseWorks.Helper.Enums;
 using EclipseWorks.Helper.Extensions;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,19 @@ namespace EclipseWorks.Infrastructure.Repositories
                 .ToListAsync(ct);
         }
 
+        public async Task<IEnumerable<TaskModel>> FindAllPendingByProjectAsync(long projectId, CancellationToken ct)
+        {
+            return await _dbContext
+                .Set<TaskModel>()
+                .AsNoTracking()
+                .Include(i => i.Project)
+                .Where(x => 
+                    x.ProjectId == projectId &&
+                    x.Active &&
+                    (x.TaskStatusId == (short)eTaskStatus.Pending || x.TaskStatusId == (short)eTaskStatus.InProgress))
+                .ToListAsync(ct);
+        }
+
         public async Task<TaskModel> FindByTitleAsync(string title, CancellationToken ct)
         {
             title = title.RemoveDiacritics();
@@ -25,7 +39,7 @@ namespace EclipseWorks.Infrastructure.Repositories
                 .Set<TaskModel>()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x =>
-                    EF.Functions.Unaccent(x.Title.ToLower()).Equals(title.ToLower())
+                    x.Title.ToLower().Equals(title.ToLower())
                     && x.Active,
                     cancellationToken: ct);
         }
@@ -38,11 +52,14 @@ namespace EclipseWorks.Infrastructure.Repositories
                  .Where(x => x.ProjectId == projectId && x.Active)
                  .ToListAsync(ct);
 
-            list.ForEach(a =>
+            if (list != null && list.Count > 0)
             {
-                a.Active = false;
-                Update(a);
-            });
+                list.ForEach(a =>
+                {
+                    a.Active = false;
+                    Update(a);
+                });
+            }
         }
     }
 }

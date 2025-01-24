@@ -70,10 +70,10 @@ namespace EclipseWorks.Services
         {
             if (id > 0)
             {
-                var Users = await _unitOfWork.User.FindOneAsync(x => x.Id == id, ct);
+                var obj = await _unitOfWork.User.FindOneAsync(x => x.Id == id, ct);
 
-                if (Users != null)
-                    return Users;
+                if (obj != null)
+                    return obj;
             }
 
             return null;

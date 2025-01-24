@@ -81,6 +81,15 @@ namespace EclipseWorks.Services
             return await _unitOfWork.Task.FindAllByProjectAsync(projectId, ct);
         }
 
+        public async Task<IEnumerable<TaskModel>> GetAllPendindByProjectAsync(long projectId, CancellationToken ct)
+        {
+            CustomException.When(projectId <= 0, Message.MSG0016("Project Id"));
+            var project = await _projectService.GetByIdAsync(projectId, ct);
+            CustomException.When(project == null || project.Id <= 0, Message.MSG0049("Project", "Id"));
+
+            return await _unitOfWork.Task.FindAllPendingByProjectAsync(projectId, ct);
+        }
+
         public async Task<TaskModel> GetByIdAsync(long id, CancellationToken ct)
         {
             if (id > 0)

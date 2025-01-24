@@ -5,6 +5,7 @@ using EclipseWorks.DTO.Project;
 using EclipseWorks.Services;
 using EclipseWorks.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 
 namespace EclipseWorks.API.Controllers
 {
@@ -20,8 +21,8 @@ namespace EclipseWorks.API.Controllers
         {
             var result = _mapper.Map<List<ProjectListingDTO>>(await _projectService.GetAllByUserAsync(userId, ct));
 
-            if (result == null)
-                return NotFound(new APIResponseDTO<List<ProjectListingDTO>>());
+            if (result == null || result.Count <= 0)
+                return NoContent();
 
             return Ok(new APIResponseDTO<List<ProjectListingDTO>> { Success = true, Data = result });
         }

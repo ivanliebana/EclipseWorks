@@ -59,11 +59,11 @@ namespace EclipseWorks.Services
 
             using var scope = new TransactionScope(TransactionScopeOption.Required, TransactionScopeAsyncFlowOption.Enabled);
 
-            var obj = await _unitOfWork.Project.FindByIdAsync(id, ct, false);
+            var obj = await _unitOfWork.Project.FindOneAsync(x => x.Id == id, ct, new Core.FindOptions { IsAsNoTracking = true });
             CustomException.When(obj == null || obj.Id <= 0, Message.MSG0049("Project", "Id"));
-            CustomException.When(obj.Task != null && obj.Task.Where(x => x.TaskStatusId == (short)eTaskStatus.Pending || x.TaskStatusId == (short)eTaskStatus.InProgress).Any(), "The project cannot be removed because there are still pending tasks associated with it. Please complete or remove pending tasks before proceeding");
 
-            obj.Active = false;
+            var taskPendingList = await _taskService.Value.GetAllPendindByProjectAsync(1, ct);
+            CustomException.When(taskPendingList != null && taskPendingList.Any(), "The project cannot be removed because there are still pending tasks associated with it. Please complete or remove pending tasks before proceeding");
 
             await _taskService.Value.RemoveAllByProjectAsync(obj.Id, ct);
 
