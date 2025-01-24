@@ -8,7 +8,13 @@ O projeto foi criado com o objetivo de fornecer uma API moderna para o gerenciam
 - Para realizar os testes dos endpoints disponíveis, utilizar o Swagger pela url: http://localhost:5009/swagger/index.html
 
 Qualquer dúvida entrar em contato pelo e-mail: ivan.liebana@gmail.com
-  
+
+## Perguntas ao P.O.
+Como poderíamos melhorar a questão da segurança.
+
+## Possíveis pontos de melhoria, implementação de padrões, visão do projeto sobre arquitetura/cloud
+Acredito que seria interessante implemetar no futuro a metodologia CI/CD para acelerar o processo de entrega de novas funcionalidades e atualizações aos usuários. Também acredito ser muito importante a implementação de mecanismos de autenticação e autorização visando a segurança e controle. 
+
 ## Authors
 
 - [@ivanliebana](https://www.github.com/ivanliebana)
