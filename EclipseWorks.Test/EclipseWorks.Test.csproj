@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EclipseWorks\EclipseWorks.API\EclipseWorks.API.csproj" />
+    <ProjectReference Include="..\EclipseWorks.API\EclipseWorks.API.csproj" />
   </ItemGroup>
 
 </Project>
