@@ -14,7 +14,7 @@ namespace EclipseWorks.Infrastructure.Repositories
                 .Set<TaskModel>()
                 .AsNoTracking()
                 .Include(i => i.Project)
-                .Where(x => x.ProjectId == projectId && x.Active)
+                .Where(x => x.ProjectId == projectId && x.Active && x.Project.Active)
                 .ToListAsync(ct);
         }
 
@@ -25,8 +25,9 @@ namespace EclipseWorks.Infrastructure.Repositories
                 .AsNoTracking()
                 .Include(i => i.Project)
                 .Where(x => 
-                    x.ProjectId == projectId &&
-                    x.Active &&
+                    x.ProjectId == projectId
+                    && x.Project.Active
+                    && x.Active &&
                     (x.TaskStatusId == (short)eTaskStatus.Pending || x.TaskStatusId == (short)eTaskStatus.InProgress))
                 .ToListAsync(ct);
         }
@@ -40,8 +41,27 @@ namespace EclipseWorks.Infrastructure.Repositories
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x =>
                     x.Title.ToLower().Equals(title.ToLower())
+                    && x.Project.Active 
                     && x.Active,
                     cancellationToken: ct);
+        }
+
+        public async Task<IEnumerable<TaskModel>> FindByLast30Days(CancellationToken ct)
+        {
+            var endDate = DateTime.Now.Date.AddHours(23).AddMinutes(59).AddSeconds(59);
+            var startDate = endDate.AddDays(-30).Date;
+
+            return await _dbContext
+                .Set<TaskModel>()
+                .AsNoTracking()
+                .Include(i => i.Project.User)
+                .Where(x =>
+                    x.CompletionDate != null &&
+                    x.Project.Active &&
+                    x.Active &&
+                    x.TaskStatusId == (short)eTaskStatus.Completed &&
+                    (x.CompletionDate >= startDate && x.CompletionDate <= endDate))
+                .ToListAsync(ct);
         }
 
         public async Task RemoveAllByProjectAsync(long projectId, CancellationToken ct)

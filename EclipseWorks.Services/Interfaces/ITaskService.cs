@@ -8,5 +8,6 @@ namespace EclipseWorks.Services.Interfaces
         Task RemoveAllByProjectAsync(long projectId, CancellationToken ct);
         Task<IEnumerable<TaskModel>> GetAllByProjectAsync(long projectId, CancellationToken ct);
         Task<IEnumerable<TaskModel>> GetAllPendindByProjectAsync(long projectId, CancellationToken ct);
+        Task<IEnumerable<TaskPerformanceLast30DaysModel>> GetPerformanceLast30Days(long applicantUserId, CancellationToken ct);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EclipseWorks.Core.Models;
 using EclipseWorks.DTO.Project;
+using EclipseWorks.DTO.Report;
 using EclipseWorks.DTO.Task;
 using EclipseWorks.DTO.TaskComment;
 using EclipseWorks.Helper.Enums;
@@ -11,6 +12,8 @@ namespace EclipseWorks.API.Mappers
     {
         public AutoMapperProfile()
         {
+            CreateMap<TaskPerformanceLast30DaysModel, TaskListingPerformanceLast30DaysDTO>();
+
             CreateMap<TaskCommentRegistrationDTO, TaskCommentModel>();
 
             CreateMap<ProjectListingDTO, ProjectModel>().ReverseMap()

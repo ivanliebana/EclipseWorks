@@ -37,6 +37,9 @@ namespace EclipseWorks.Core.Models
         [Column("duedate", TypeName = "timestamp(6)")]
         public DateTime DueDate { get; set; } = DateTime.Now;
 
+        [Column("completiondate", TypeName = "timestamp(6)")]
+        public DateTime? CompletionDate { get; set; }
+
         [Required]
         [Column("active")]
         public bool Active { get; set; } = true;

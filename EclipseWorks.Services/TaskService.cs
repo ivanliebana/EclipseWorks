@@ -8,10 +8,14 @@ using System.Transactions;
 
 namespace EclipseWorks.Services
 {
-    public class TaskService(IUnitOfWork unitOfWork, IProjectService projectService) : ITaskService
+    public class TaskService(
+        IUnitOfWork unitOfWork,
+        IProjectService projectService,
+        IUserService userService) : ITaskService
     {
         public readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IProjectService _projectService = projectService;
+        private readonly IUserService _userService = userService;
 
         public async Task<TaskModel> AddAsync(TaskModel entity, CancellationToken ct)
         {
@@ -115,6 +119,14 @@ namespace EclipseWorks.Services
             obj.Title = entity.Title;
             obj.Description = entity.Description;
             obj.TaskStatusId = entity.TaskStatusId;
+
+            if (entity.TaskStatusId != obj.TaskStatusId)
+            {
+                obj.CompletionDate = null;
+
+                if (entity.TaskStatusId == (short)eTaskStatus.Completed)
+                    obj.CompletionDate = DateTime.Now;
+            }
 
             _unitOfWork.Task.Update(obj);
 
@@ -245,6 +257,14 @@ namespace EclipseWorks.Services
             var obj = await _unitOfWork.Task.FindOneAsync(x => x.Id == entity.Id, ct, new Core.FindOptions { IsAsNoTracking = true });
             CustomException.When(obj == null || obj.Id <= 0, Message.MSG0049("Task", "Id"));
 
+            if (entity.TaskStatusId != obj.TaskStatusId)
+            {
+                obj.CompletionDate = null;
+
+                if (entity.TaskStatusId == (short)eTaskStatus.Completed)
+                    obj.CompletionDate = DateTime.Now;
+            }
+
             obj.TaskStatusId = entity.TaskStatusId;
 
             _unitOfWork.Task.Update(obj);
@@ -252,6 +272,47 @@ namespace EclipseWorks.Services
             await _unitOfWork.SaveChangesAsync(ct);
 
             scope.Complete();
+        }
+
+        public async Task<IEnumerable<TaskPerformanceLast30DaysModel>> GetPerformanceLast30Days(long applicantUserId, CancellationToken ct)
+        {
+            List<TaskPerformanceLast30DaysModel> resultList = [];
+
+            var applicanteUser = await _userService.GetByIdAsync(applicantUserId, ct);
+
+            CustomException.When(applicanteUser == null || applicanteUser.Id <= 0, Message.MSG0049("User", "Id"));
+            CustomException.When(applicanteUser != null && applicanteUser.Id > 0 && !applicanteUser.IsManager, Message.MSG0030);
+
+            var tasksInLast30Days = await _unitOfWork.Task.FindByLast30Days(ct);
+
+            var tasksPerUser = tasksInLast30Days
+                    .GroupBy(t => t.Project.UserId)
+                    .Select(g => new { UserId = g.Key, TaskCount = g.Count() })
+                    .ToList();
+
+            if (tasksPerUser == null || tasksPerUser.Count <= 0)
+                return resultList;
+
+            foreach (var task in tasksPerUser)
+            {
+                var userId = task.UserId;
+                var userName = tasksInLast30Days.FirstOrDefault(x => x.Project.UserId == userId).Project.User.Name;
+                var numberTasksCompleted = task.TaskCount;
+                var averageNumberTasksCompleted = task.TaskCount / 30.0;
+
+                var objTaskPerformanceLast30Days = new TaskPerformanceLast30DaysModel
+                {
+                    UserName = userName,
+                    UserId = userId,
+                    NumberTasksCompleted = numberTasksCompleted,
+                    AverageNumberTasksCompleted = averageNumberTasksCompleted,
+                    ResultText = $"User with 'Name' {userName} and 'Id' {userId} has {numberTasksCompleted} completed tasks in the last 30 days, which is {averageNumberTasksCompleted:F2} completed tasks per day."
+                };
+
+                resultList.Add(objTaskPerformanceLast30Days);
+            }
+
+            return resultList;
         }
     }
 }
